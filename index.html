@@ -63,10 +63,28 @@ var V=[
  ic:'<path d="M26 84V34l34-20 34 20v50z" fill="none" stroke="#FFC300" stroke-width="4"/><path d="M52 42h16v12h12v14H68v12H52V68H40V54h12z" fill="#FFD60A" transform="translate(0,-4)"/>'}
 ];
 var app=document.getElementById("app");
-var h='<section class="hero"><i class="px" style="right:6%;top:30px"></i><i class="px" style="right:14%;top:90px;width:16px;height:16px;background:#FFD60A"></i><p class="eyebrow">Ensiklopedia seluler kesehatan</p><h1>PANDUAN<br><span>DIGITAL</span><br>MOBILE JKN</h1><p class="tag">Mudah Mengakses Layanan JKN, Cukup dari Genggaman</p></section>';
-h+='<section class="intro"><h2>Halo, Sobat JKN! 👋</h2><p>Masih bingung menggunakan Mobile JKN? Yuk, pelajari melalui tiga video tutorial berikut!</p></section><section class="grid">';
-V.forEach(function(v){h+='<a class="card" href="https://youtu.be/'+v.yt+'" target="_blank" rel="noopener noreferrer" aria-label="'+v.t+' (membuka YouTube)"><span class="no">'+v.no+'</span><svg viewBox="0 0 120 96" aria-hidden="true">'+v.ic+'</svg><small>'+v.cat+'</small><h3>'+v.t+'</h3><p>'+v.d+'</p><span class="btn">TONTON VIDEO ▶</span></a>'});
-app.innerHTML=h+'</section>';
+function home(){
+  var h='<section class="hero"><i class="px" style="right:6%;top:30px"></i><i class="px" style="right:14%;top:90px;width:16px;height:16px;background:#FFD60A"></i><h1>PANDUAN<br><span>DIGITAL</span><br>MOBILE JKN</h1><p class="tag">Mudah Mengakses Layanan JKN, Cukup dari Genggaman</p></section>';
+  h+='<section class="intro"><h2>Halo, Sobat JKN! 👋</h2><p>Masih bingung menggunakan Mobile JKN? Yuk, pelajari melalui tiga video tutorial berikut!</p></section><section class="grid">';
+  V.forEach(function(v){h+='<button class="card" data-go="'+v.id+'" aria-label="'+v.t+'"><span class="no">'+v.no+'</span><svg viewBox="0 0 120 96" aria-hidden="true">'+v.ic+'</svg><small>'+v.cat+'</small><h3>'+v.t+'</h3><p>'+v.d+'</p><span class="btn">TONTON VIDEO ▶</span></button>'});
+  app.innerHTML=h+'</section>';
+}
+function video(v){
+  var o='';V.forEach(function(x){if(x.id!==v.id)o+='<button data-go="'+x.id+'">'+x.no+' · '+x.t+'</button>'});
+  app.innerHTML='<button class="back" data-go="">← KEMBALI KE BERANDA</button><div class="vhead"><p class="eyebrow">Video '+v.no+' dari 03</p><h2>'+v.t+'</h2><p>'+v.d+'</p></div><div class="vwrap"><iframe src="https://www.youtube.com/embed/'+v.yt+'?rel=0" title="'+v.t+'" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div class="others">'+o+'</div>';
+}
+function route(){
+  var k=location.hash.replace("#",""),v=V.filter(function(x){return x.id===k})[0];
+  if(v)video(v);else home();
+  window.scrollTo(0,0);
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-go]");if(!b)return;
+  var g=b.getAttribute("data-go");
+  if(g)location.hash=g;else{history.pushState(null,"",location.pathname+location.search);route()}
+});
+window.addEventListener("hashchange",route);
+route();
 </script>
 </body>
 </html>
